@@ -45,16 +45,28 @@ namespace IoT_defender
             PingReply reply;
             IPHostEntry host;
 
+            string counter = "";
+
             for (int i = 0; i < 254; i++)
             {
                 curr = new Ping();
-                reply = curr.Send(textBox1.Text + i.ToString());
+                reply = curr.Send(input_ip.Text + i.ToString());
+
+
+                //PLS MAN FIX KI TF JE TU
+                this.BeginInvoke((Action)delegate ()
+                {
+                    //counter
+                    counter = "current ip: " + input_ip.Text + i.ToString();
+                    curr_ip.Text = counter;
+                });
+                //!!!
 
                 if (reply.Status == IPStatus.Success)
                 {
                     try
                     {
-                        ip_address = IPAddress.Parse(textBox1.Text + i.ToString());
+                        ip_address = IPAddress.Parse(input_ip.Text + i.ToString());
                         host = Dns.GetHostEntry(ip_address);
                         name = host.HostName;
 
@@ -63,9 +75,9 @@ namespace IoT_defender
                             int n = dgv.Rows.Count;
                             dgv.Rows.Add();
                             
-                            dgv.Rows[n].Cells[0].Value = textBox1.Text + i.ToString();
+                            dgv.Rows[n].Cells[0].Value = input_ip.Text + i.ToString();
                             dgv.Rows[n].Cells[1].Value = name;
-                            dgv.Rows[n].Cells[2].Value = "Active";
+                            dgv.Rows[n].Cells[2].Value = "Active";                           
                         });
                     }
                     catch (Exception exception)
