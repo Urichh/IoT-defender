@@ -30,7 +30,7 @@ namespace IoT_defender
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.input_ip = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -39,15 +39,16 @@ namespace IoT_defender
             this.ip = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.hostname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.curr_ip = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
             this.SuspendLayout();
             // 
-            // textBox1
+            // input_ip
             // 
-            this.textBox1.Location = new System.Drawing.Point(107, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(135, 20);
-            this.textBox1.TabIndex = 0;
+            this.input_ip.Location = new System.Drawing.Point(107, 12);
+            this.input_ip.Name = "input_ip";
+            this.input_ip.Size = new System.Drawing.Size(135, 20);
+            this.input_ip.TabIndex = 0;
             // 
             // contextMenuStrip1
             // 
@@ -120,15 +121,25 @@ namespace IoT_defender
             this.status.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.status.Width = 200;
             // 
+            // curr_ip
+            // 
+            this.curr_ip.AutoSize = true;
+            this.curr_ip.Location = new System.Drawing.Point(323, 15);
+            this.curr_ip.Name = "curr_ip";
+            this.curr_ip.Size = new System.Drawing.Size(54, 13);
+            this.curr_ip.TabIndex = 5;
+            this.curr_ip.Text = "current ip:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(734, 461);
+            this.Controls.Add(this.curr_ip);
             this.Controls.Add(this.dgv);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.input_ip);
             this.Name = "Form1";
             this.Text = "IoT Defender";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -140,7 +151,7 @@ namespace IoT_defender
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox input_ip;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
@@ -149,6 +160,7 @@ namespace IoT_defender
         private System.Windows.Forms.DataGridViewTextBoxColumn ip;
         private System.Windows.Forms.DataGridViewTextBoxColumn hostname;
         private System.Windows.Forms.DataGridViewTextBoxColumn status;
+        private System.Windows.Forms.Label curr_ip;
     }
 }
 
