@@ -74,32 +74,32 @@ namespace IoT_defender
                 if (currentCIDR < 8)
                 {
                     maskedPart = Convert.ToString(currentParts[0], 2).PadLeft(8, '0');
-                    maskedPart = maskedPart.Substring(0, currentCIDR % 8);
+                    maskedPart = maskedPart.Substring(0, currentCIDR % 8).PadRight(8, '0');
                     currentMaskedPart = Convert.ToInt32(maskedPart, 2);
                     currentStartIP = currentMaskedPart + ".0.0.0";
                 }
                 else if (currentCIDR >= 8 && currentCIDR < 16)
                 {
                     maskedPart = Convert.ToString(currentParts[1], 2).PadLeft(8, '0');
-                    maskedPart = maskedPart.Substring(0, currentCIDR % 8);
+                    maskedPart = maskedPart.Substring(0, currentCIDR % 8).PadRight(8, '0');
                     currentMaskedPart = Convert.ToInt32(maskedPart, 2);
                     currentStartIP = currentParts[0] + "." + currentMaskedPart + ".0.0";
                 }
                 else if (currentCIDR >= 16 && currentCIDR < 24)
                 {
                     maskedPart = Convert.ToString(currentParts[2], 2).PadLeft(8, '0');
-                    maskedPart = maskedPart.Substring(0, currentCIDR % 8);
+                    maskedPart = maskedPart.Substring(0, currentCIDR % 8).PadRight(8, '0');
                     currentMaskedPart = Convert.ToInt32(maskedPart, 2);
                     currentStartIP = currentParts[0] + "." + currentParts[1] + "." + currentMaskedPart + ".0";
                 }
                 else
                 {
                     maskedPart = Convert.ToString(currentParts[3], 2).PadLeft(8, '0');
-                    maskedPart = maskedPart.Substring(0, currentCIDR % 8);
+                    maskedPart = maskedPart.Substring(0, currentCIDR % 8).PadRight(8, '0');
                     currentMaskedPart = Convert.ToInt32(maskedPart, 2);
-                    currentStartIP = currentParts[0] + "." + currentParts[1] + "." + currentParts[3] + "." + currentMaskedPart;
+                    currentStartIP = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + currentMaskedPart;
                 }
-                Console.WriteLine("\n START IP: " + currentStartIP);
+                Console.WriteLine("\nSTART IP: " + currentStartIP);
             }
             else
             {
