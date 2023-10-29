@@ -105,7 +105,7 @@ namespace IoT_defender
             {
                 Console.WriteLine("ERROR: CIDR OUT OF BOUNDS");
             }
-            
+            //todo: fix tale da 254, nism zihr lih kaku bi moglu bit no
             for (int i = currentMaskedPart + 1; i <= 254; i++)
             {
                 currentPing = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + i;
