@@ -67,10 +67,10 @@ namespace IoT_defender
 
             string currentStartIP = "";
 
-            if(currentCIDR > 0 && currentCIDR < 36)
+            int currentMaskedPart = 0;
+            if (currentCIDR > 0 && currentCIDR < 36)
             {
                 string maskedPart = "";
-                int currentMaskedPart = 0;
                 if (currentCIDR < 8)
                 {
                     maskedPart = Convert.ToString(currentParts[0], 2).PadLeft(8, '0');
@@ -106,18 +106,18 @@ namespace IoT_defender
                 Console.WriteLine("ERROR: CIDR OUT OF BOUNDS");
             }
             
-            for (int i = 0; i < 254; i++)
+            for (int i = currentMaskedPart + 1; i <= 254; i++)
             {
-                currentPing = input_ip.Text;
+                currentPing = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + i;
 
                 curr = new Ping();
-                reply = curr.Send(currentPing + i.ToString());
+                reply = curr.Send(currentPing);
 
                 //PLS MAN FIX KI TF JE TU
                 this.BeginInvoke((Action)delegate ()
                 {
                     //counter
-                    counter = "current ip: " + currentPing + i.ToString();
+                    counter = "current ip: " + currentPing;
                     curr_ip.Text = counter;
                 });
                 //!!!
@@ -126,7 +126,7 @@ namespace IoT_defender
                 {
                     try
                     {
-                        ip_address = IPAddress.Parse(currentPing + i.ToString());
+                        ip_address = IPAddress.Parse(currentPing);
                         host = Dns.GetHostEntry(ip_address);
                         name = host.HostName;
 
@@ -135,7 +135,7 @@ namespace IoT_defender
                             int n = dgv.Rows.Count;
                             dgv.Rows.Add();
                             
-                            dgv.Rows[n].Cells[0].Value = currentPing + i.ToString();
+                            dgv.Rows[n].Cells[0].Value = currentPing;
                             dgv.Rows[n].Cells[1].Value = name;
                             dgv.Rows[n].Cells[2].Value = "Active";                           
                         });
