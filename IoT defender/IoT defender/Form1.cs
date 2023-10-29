@@ -106,14 +106,12 @@ namespace IoT_defender
                 Console.WriteLine("ERROR: CIDR OUT OF BOUNDS");
             }
             
-
             for (int i = 0; i < 254; i++)
             {
                 currentPing = input_ip.Text;
 
                 curr = new Ping();
                 reply = curr.Send(currentPing + i.ToString());
-
 
                 //PLS MAN FIX KI TF JE TU
                 this.BeginInvoke((Action)delegate ()
