@@ -113,61 +113,57 @@ namespace IoT_defender
             }
             if(currentLastOctet == -1)
                 Console.WriteLine("ERROR: INVALID OCTET");
+
             //todo: to gre u infinite loop u primeru invalid octeta
             //nism sure glede pogoja tbh
-            for (int j = 0; j < 4-currentLastOctet; j++)
+            //todo: fix tale da 254, nism zihr lih kaku bi moglu bit no
+            IPAddress convertanIP = IPAddress.Parse(currentStartIP);
+            uint prviIP = BitConverter.ToUInt32(convertanIP.GetAddressBytes(), 0);
+            IPAddress convertanZadnIP = IPAddress.Parse("255.255.255.255");
+            uint zadnIP = BitConverter.ToUInt32(convertanZadnIP.GetAddressBytes(), 0);
+
+            for (uint i = prviIP + 1; i <= zadnIP; i++)
             {
-                //todo: fix tale da 254, nism zihr lih kaku bi moglu bit no
-                for (int i = currentMaskedPart + 1; i <= 254; i++)
+                //currentPing = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + i;
+                byte[] bytes = BitConverter.GetBytes(i);
+                //Array.Reverse(bytes);
+                IPAddress currentIP = new IPAddress(bytes);
+
+                curr = new Ping();
+                Console.WriteLine("Current IP: " + currentIP);
+                Console.WriteLine("i: " + i);
+                reply = curr.Send(currentIP);
+
+                //PLS MAN FIX KI TF JE TU
+                this.BeginInvoke((Action)delegate ()
                 {
-                    //to nastaj pogoje glede na kuk je 'j'
-                    switch(j)
-                    {
-                        case 3:
-                            currentPing = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + i;
-                            break;
-                        case 2:
+                    //counter
+                    counter = "current ip: " + currentIP;
+                    curr_ip.Text = counter;
+                });
+                //!!!
 
-                        default:
-                            Console.WriteLine("switch error");
-                            break;
+                if (reply.Status == IPStatus.Success)
+                {
+                    try
+                    {
+                        ip_address = IPAddress.Parse(currentIP.ToString());
+                        host = Dns.GetHostEntry(ip_address);
+                        name = host.HostName;
+
+                        this.BeginInvoke((Action)delegate ()
+                        {
+                            int n = dgv.Rows.Count;
+                            dgv.Rows.Add();
+
+                            dgv.Rows[n].Cells[0].Value = currentIP;
+                            dgv.Rows[n].Cells[1].Value = name;
+                            dgv.Rows[n].Cells[2].Value = "Active";
+                        });
                     }
-                    
-
-                    curr = new Ping();
-                    reply = curr.Send(currentPing);
-
-                    //PLS MAN FIX KI TF JE TU
-                    this.BeginInvoke((Action)delegate ()
+                    catch (Exception exception)
                     {
-                        //counter
-                        counter = "current ip: " + currentPing;
-                        curr_ip.Text = counter;
-                    });
-                    //!!!
 
-                    if (reply.Status == IPStatus.Success)
-                    {
-                        try
-                        {
-                            ip_address = IPAddress.Parse(currentPing);
-                            host = Dns.GetHostEntry(ip_address);
-                            name = host.HostName;
-
-                            this.BeginInvoke((Action)delegate ()
-                            {
-                                int n = dgv.Rows.Count;
-                                dgv.Rows.Add();
-
-                                dgv.Rows[n].Cells[0].Value = currentPing;
-                                dgv.Rows[n].Cells[1].Value = name;
-                                dgv.Rows[n].Cells[2].Value = "Active";
-                            });
-                        }
-                        catch (Exception exception)
-                        {
-
-                        }
                     }
                 }
             }
