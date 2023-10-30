@@ -55,6 +55,7 @@ namespace IoT_defender
             int currentCIDR = Int32.Parse(currentTemp[1]);
 
             currentTemp = currentPing.Split('.');
+            //fyi current parts == octets, sam nism se spovnu prej te beside
             int[] currentParts = { Int32.Parse(currentTemp[0]), Int32.Parse(currentTemp[1]), Int32.Parse(currentTemp[2]), Int32.Parse(currentTemp[3]) };
 
             //debugging.......
@@ -66,6 +67,7 @@ namespace IoT_defender
             //................
 
             string currentStartIP = "";
+            int currentLastOctet = -1;
 
             int currentMaskedPart = 0;
             if (currentCIDR > 0 && currentCIDR < 36)
@@ -77,6 +79,7 @@ namespace IoT_defender
                     maskedPart = maskedPart.Substring(0, currentCIDR % 8).PadRight(8, '0');
                     currentMaskedPart = Convert.ToInt32(maskedPart, 2);
                     currentStartIP = currentMaskedPart + ".0.0.0";
+                    currentLastOctet = 0;
                 }
                 else if (currentCIDR >= 8 && currentCIDR < 16)
                 {
@@ -84,6 +87,7 @@ namespace IoT_defender
                     maskedPart = maskedPart.Substring(0, currentCIDR % 8).PadRight(8, '0');
                     currentMaskedPart = Convert.ToInt32(maskedPart, 2);
                     currentStartIP = currentParts[0] + "." + currentMaskedPart + ".0.0";
+                    currentLastOctet = 1;
                 }
                 else if (currentCIDR >= 16 && currentCIDR < 24)
                 {
@@ -91,6 +95,7 @@ namespace IoT_defender
                     maskedPart = maskedPart.Substring(0, currentCIDR % 8).PadRight(8, '0');
                     currentMaskedPart = Convert.ToInt32(maskedPart, 2);
                     currentStartIP = currentParts[0] + "." + currentParts[1] + "." + currentMaskedPart + ".0";
+                    currentLastOctet = 2;
                 }
                 else
                 {
@@ -98,6 +103,7 @@ namespace IoT_defender
                     maskedPart = maskedPart.Substring(0, currentCIDR % 8).PadRight(8, '0');
                     currentMaskedPart = Convert.ToInt32(maskedPart, 2);
                     currentStartIP = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + currentMaskedPart;
+                    currentLastOctet = 3;
                 }
                 Console.WriteLine("\nSTART IP: " + currentStartIP);
             }
@@ -105,48 +111,72 @@ namespace IoT_defender
             {
                 Console.WriteLine("ERROR: CIDR OUT OF BOUNDS");
             }
-            //todo: fix tale da 254, nism zihr lih kaku bi moglu bit no
-            for (int i = currentMaskedPart + 1; i <= 254; i++)
+            if(currentLastOctet == -1)
+                Console.WriteLine("ERROR: INVALID OCTET");
+            //todo: to gre u infinite loop u primeru invalid octeta
+            //nism sure glede pogoja tbh
+            for (int j = 0; j < 4-currentLastOctet; j++)
             {
-                currentPing = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + i;
-
-                curr = new Ping();
-                reply = curr.Send(currentPing);
-
-                //PLS MAN FIX KI TF JE TU
-                this.BeginInvoke((Action)delegate ()
+                //todo: fix tale da 254, nism zihr lih kaku bi moglu bit no
+                for (int i = currentMaskedPart + 1; i <= 254; i++)
                 {
-                    //counter
-                    counter = "current ip: " + currentPing;
-                    curr_ip.Text = counter;
-                });
-                //!!!
-
-                if (reply.Status == IPStatus.Success)
-                {
-                    try
+                    //to nastaj pogoje glede na kuk je 'j'
+                    switch(j)
                     {
-                        ip_address = IPAddress.Parse(currentPing);
-                        host = Dns.GetHostEntry(ip_address);
-                        name = host.HostName;
+                        case 3:
+                            currentPing = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + i;
+                            break;
+                        case 2:
 
-                        this.BeginInvoke((Action)delegate ()
-                        {
-                            int n = dgv.Rows.Count;
-                            dgv.Rows.Add();
-                            
-                            dgv.Rows[n].Cells[0].Value = currentPing;
-                            dgv.Rows[n].Cells[1].Value = name;
-                            dgv.Rows[n].Cells[2].Value = "Active";                           
-                        });
+                        default:
+                            Console.WriteLine("switch error");
+                            break;
                     }
-                    catch (Exception exception)
-                    {
+                    
 
+                    curr = new Ping();
+                    reply = curr.Send(currentPing);
+
+                    //PLS MAN FIX KI TF JE TU
+                    this.BeginInvoke((Action)delegate ()
+                    {
+                        //counter
+                        counter = "current ip: " + currentPing;
+                        curr_ip.Text = counter;
+                    });
+                    //!!!
+
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        try
+                        {
+                            ip_address = IPAddress.Parse(currentPing);
+                            host = Dns.GetHostEntry(ip_address);
+                            name = host.HostName;
+
+                            this.BeginInvoke((Action)delegate ()
+                            {
+                                int n = dgv.Rows.Count;
+                                dgv.Rows.Add();
+
+                                dgv.Rows[n].Cells[0].Value = currentPing;
+                                dgv.Rows[n].Cells[1].Value = name;
+                                dgv.Rows[n].Cells[2].Value = "Active";
+                            });
+                        }
+                        catch (Exception exception)
+                        {
+
+                        }
                     }
                 }
             }
             MessageBox.Show("Subnet scan completed");
+        }
+
+        private void dgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

@@ -89,6 +89,7 @@ namespace IoT_defender
             this.dgv.ReadOnly = true;
             this.dgv.Size = new System.Drawing.Size(707, 408);
             this.dgv.TabIndex = 4;
+            this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
             // 
             // ip
             // 
