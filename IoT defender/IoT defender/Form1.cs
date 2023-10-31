@@ -122,17 +122,33 @@ namespace IoT_defender
             IPAddress convertanZadnIP = IPAddress.Parse("255.255.255.255");
             uint zadnIP = BitConverter.ToUInt32(convertanZadnIP.GetAddressBytes(), 0);
 
+            //Array.Reverse(bytes);
             for (uint i = prviIP + 1; i <= zadnIP; i++)
             {
-                //currentPing = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + i;
                 byte[] bytes = BitConverter.GetBytes(i);
-                //Array.Reverse(bytes);
+
+
+                if (i != prviIP + 1)
+                {
+                    //Array.Reverse(bytes);
+                    Console.WriteLine("i indeed ni enaka prvi ip");
+                }
+
+                //if (BitConverter.IsLittleEndian)
+                    //Array.Reverse(bytes);
+
+                //currentPing = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + i;
+
                 IPAddress currentIP = new IPAddress(bytes);
 
                 curr = new Ping();
                 Console.WriteLine("Current IP: " + currentIP);
                 Console.WriteLine("i: " + i);
+                for (int k = 0; k < bytes.Length; k++)
+                    Console.WriteLine(k + ": " + bytes[k]);
                 reply = curr.Send(currentIP);
+
+                
 
                 //PLS MAN FIX KI TF JE TU
                 this.BeginInvoke((Action)delegate ()
@@ -166,6 +182,7 @@ namespace IoT_defender
 
                     }
                 }
+                //Array.Reverse(bytes);
             }
             MessageBox.Show("Subnet scan completed");
         }
