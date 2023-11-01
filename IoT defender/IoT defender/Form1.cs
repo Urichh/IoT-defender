@@ -14,50 +14,82 @@ using System.Threading;
 
 namespace IoT_defender
 {
-    public partial class Form1 : Form
+    public partial class mainPage : Form
     {
-        public Form1()
+        public mainPage()
         {
             InitializeComponent();
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
+        /*
         private void button1_Click(object sender, EventArgs e)
         {
             bw.RunWorkerAsync();
         }
-        private void Scan(object sender, DoWorkEventArgs e)
+        */
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => Scan());
+        }
+
+        private async Task Scan()
         {
             Thread.Sleep(100);
+
             string name = "";
-
+            string counter = "";
             IPAddress ip_address;
-
             Ping curr;
             PingReply reply;
             IPHostEntry host;
 
-            string counter = "";
+            string currentAddr = input_ip.Text;
+            string[] currentTemp = currentAddr.Split('/');
+            string currentPing = currentTemp[0];
+            int currentCIDR = Int32.Parse(currentTemp[1]);
 
-            for (int i = 0; i < 254; i++)
+            IPAddress ip = IPAddress.Parse(currentPing);
+            byte[] ipBytes = ip.GetAddressBytes();
+
+            uint mask = ~(uint.MaxValue >> currentCIDR);
+            byte[] maskBytes = BitConverter.GetBytes(mask);
+
+            if (BitConverter.IsLittleEndian)
             {
+                Array.Reverse(maskBytes);
+            }
+
+            byte[] networkAddress = new byte[ipBytes.Length];
+            byte[] broadcastAddress = new byte[ipBytes.Length];
+
+            for (int i = 0; i < ipBytes.Length; i++)
+            {
+                networkAddress[i] = (byte)(ipBytes[i] & maskBytes[i]);
+                broadcastAddress[i] = (byte)(networkAddress[i] | ~maskBytes[i]);
+            }
+
+            IPAddress firstIP = new IPAddress(networkAddress);
+            IPAddress lastIP = new IPAddress(broadcastAddress);
+
+            //for debugging purposes.............
+            Console.WriteLine("Start IP: " + firstIP.ToString());
+            Console.WriteLine("End IP: " + lastIP.ToString());
+            Console.WriteLine("CIDR: " + currentCIDR);
+            //...................................
+
+            byte[] ipBytesIterated = networkAddress.ToArray();
+            while (!ipBytesIterated.SequenceEqual(broadcastAddress))
+            {
+                IPAddress currentIP = new IPAddress(ipBytesIterated);
                 curr = new Ping();
-                reply = curr.Send(input_ip.Text + i.ToString());
+                Console.WriteLine("Current IP: " + currentIP);
+                reply = curr.Send(currentIP);
 
-
-                //PLS MAN FIX KI TF JE TU
+                //PLS MAN FIX KI TF JE TU       
                 this.BeginInvoke((Action)delegate ()
                 {
-                    //counter
-                    counter = "current ip: " + input_ip.Text + i.ToString();
+                    //counter is behind by 1 and i don't know why
+                    counter = "current ip: " + currentIP;
                     curr_ip.Text = counter;
                 });
                 //!!!
@@ -66,27 +98,42 @@ namespace IoT_defender
                 {
                     try
                     {
-                        ip_address = IPAddress.Parse(input_ip.Text + i.ToString());
-                        host = Dns.GetHostEntry(ip_address);
+                        ip_address = IPAddress.Parse(currentIP.ToString());
+                        host = await Dns.GetHostEntryAsync(ip_address);
                         name = host.HostName;
 
                         this.BeginInvoke((Action)delegate ()
                         {
                             int n = dgv.Rows.Count;
                             dgv.Rows.Add();
-                            
-                            dgv.Rows[n].Cells[0].Value = input_ip.Text + i.ToString();
+
+                            dgv.Rows[n].Cells[0].Value = currentIP;
                             dgv.Rows[n].Cells[1].Value = name;
-                            dgv.Rows[n].Cells[2].Value = "Active";                           
+                            dgv.Rows[n].Cells[2].Value = "Active";
                         });
                     }
                     catch (Exception exception)
                     {
-
+                        Console.WriteLine("ERROR: REPLY STATUS: " + exception.ToString());
+                        //if(exception.Equals(System.Net.Sockets.SocketException))
                     }
                 }
+                IncrementIPAddressBytes(ref ipBytesIterated);
             }
             MessageBox.Show("Subnet scan completed");
+        }
+        //function for incrementing to next ip address
+        private void IncrementIPAddressBytes(ref byte[] ipBytes)
+        {
+            for (int i = ipBytes.Length - 1; i >= 0; i--)
+            {
+                ipBytes[i]++;
+
+                if (ipBytes[i] != 0) // exit loop in case of overflow
+                {
+                    break;
+                }
+            }
         }
     }
 }

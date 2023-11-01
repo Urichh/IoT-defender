@@ -2,9 +2,9 @@ C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT de
 C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT defender\IoT defender\bin\Debug\IoT defender.exe
 C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT defender\IoT defender\bin\Debug\IoT defender.pdb
 C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT defender\IoT defender\obj\Debug\IoT defender.csproj.AssemblyReference.cache
-C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT defender\IoT defender\obj\Debug\IoT_defender.Form1.resources
 C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT defender\IoT defender\obj\Debug\IoT_defender.Properties.Resources.resources
 C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT defender\IoT defender\obj\Debug\IoT defender.csproj.GenerateResource.cache
 C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT defender\IoT defender\obj\Debug\IoT defender.csproj.CoreCompileInputs.cache
 C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT defender\IoT defender\obj\Debug\IoT defender.exe
 C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT defender\IoT defender\obj\Debug\IoT defender.pdb
+C:\Users\Urban\Desktop\School\Faks\2. litnk\1. semester\IPRI\IoT Defender\IoT defender\IoT defender\obj\Debug\IoT_defender.mainPage.resources
