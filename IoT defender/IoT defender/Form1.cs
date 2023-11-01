@@ -20,11 +20,19 @@ namespace IoT_defender
         {
             InitializeComponent();
         }
+        /*
         private void button1_Click(object sender, EventArgs e)
         {
             bw.RunWorkerAsync();
         }
-        private void Scan(object sender, DoWorkEventArgs e)
+        */
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => Scan());
+        }
+
+        private async Task Scan()
         {
             Thread.Sleep(100);
 
@@ -33,7 +41,7 @@ namespace IoT_defender
             IPAddress ip_address;
             Ping curr;
             PingReply reply;
-            IPHostEntry host;            
+            IPHostEntry host;
 
             string currentAddr = input_ip.Text;
             string[] currentTemp = currentAddr.Split('/');
@@ -77,7 +85,7 @@ namespace IoT_defender
                 Console.WriteLine("Current IP: " + currentIP);
                 reply = curr.Send(currentIP);
 
-                //PLS MAN FIX KI TF JE TU
+                //PLS MAN FIX KI TF JE TU       
                 this.BeginInvoke((Action)delegate ()
                 {
                     //counter is behind by 1 and i don't know why
@@ -91,7 +99,7 @@ namespace IoT_defender
                     try
                     {
                         ip_address = IPAddress.Parse(currentIP.ToString());
-                        host = Dns.GetHostEntry(ip_address);
+                        host = await Dns.GetHostEntryAsync(ip_address);
                         name = host.HostName;
 
                         this.BeginInvoke((Action)delegate ()
@@ -107,6 +115,7 @@ namespace IoT_defender
                     catch (Exception exception)
                     {
                         Console.WriteLine("ERROR: REPLY STATUS: " + exception.ToString());
+                        //if(exception.Equals(System.Net.Sockets.SocketException))
                     }
                 }
                 IncrementIPAddressBytes(ref ipBytesIterated);

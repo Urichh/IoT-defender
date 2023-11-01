@@ -118,7 +118,7 @@ namespace IoT_defender
             // 
             // bw
             // 
-            this.bw.DoWork += new System.ComponentModel.DoWorkEventHandler(this.Scan);
+            //this.bw.DoWork += new System.ComponentModel.DoWorkEventHandler(this.Scan);
             // 
             // curr_ip
             // 
