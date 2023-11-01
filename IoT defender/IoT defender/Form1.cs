@@ -112,10 +112,25 @@ namespace IoT_defender
                             dgv.Rows[n].Cells[2].Value = "Active";
                         });
                     }
-                    catch (Exception exception)
+                    catch (SocketException socketexc)
                     {
-                        Console.WriteLine("ERROR: REPLY STATUS: " + exception.ToString());
-                        //if(exception.Equals(System.Net.Sockets.SocketException))
+                        //EXCEPTION in case DNS cannot resolve hostname, in this case default value is assigned,
+                        //so that the program doesn't crash, and error message is displayed for debugging purposes.
+                        Console.WriteLine("---------------------------------");
+                        Console.WriteLine("ERROR: COULD NOT RESOLVE HOSTNAME FROM DNS: " + socketexc.ToString());
+                        this.BeginInvoke((Action)delegate ()
+                        {
+                            int n = dgv.Rows.Count;
+                            dgv.Rows.Add();
+
+                            dgv.Rows[n].Cells[0].Value = currentIP;
+                            dgv.Rows[n].Cells[1].Value = "Could not resolve hostname from DNS";
+                            dgv.Rows[n].Cells[2].Value = "Active";
+                        });
+                    }
+                    catch (Exception exc)
+                    {
+
                     }
                 }
                 IncrementIPAddressBytes(ref ipBytesIterated);
