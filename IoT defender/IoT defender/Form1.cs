@@ -73,7 +73,6 @@ namespace IoT_defender
             while (!ipBytesIterated.SequenceEqual(broadcastAddress))
             {
                 IPAddress currentIP = new IPAddress(ipBytesIterated);
-
                 curr = new Ping();
                 Console.WriteLine("Current IP: " + currentIP);
                 reply = curr.Send(currentIP);
@@ -81,7 +80,7 @@ namespace IoT_defender
                 //PLS MAN FIX KI TF JE TU
                 this.BeginInvoke((Action)delegate ()
                 {
-                    //counter
+                    //counter is behind by 1 and i don't know why
                     counter = "current ip: " + currentIP;
                     curr_ip.Text = counter;
                 });
@@ -114,6 +113,7 @@ namespace IoT_defender
             }
             MessageBox.Show("Subnet scan completed");
         }
+        //function for incrementing to next ip address
         private void IncrementIPAddressBytes(ref byte[] ipBytes)
         {
             for (int i = ipBytes.Length - 1; i >= 0; i--)
