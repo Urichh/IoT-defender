@@ -20,16 +20,6 @@ namespace IoT_defender
         {
             InitializeComponent();
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
         private void button1_Click(object sender, EventArgs e)
         {
             bw.RunWorkerAsync();
@@ -37,15 +27,13 @@ namespace IoT_defender
         private void Scan(object sender, DoWorkEventArgs e)
         {
             Thread.Sleep(100);
+
             string name = "";
-
+            string counter = "";
             IPAddress ip_address;
-
             Ping curr;
             PingReply reply;
-            IPHostEntry host;
-
-            string counter = "";
+            IPHostEntry host;            
 
             string currentAddr = input_ip.Text;
             string[] currentTemp = currentAddr.Split('/');
@@ -72,38 +60,23 @@ namespace IoT_defender
                 broadcastAddress[i] = (byte)(networkAddress[i] | ~maskBytes[i]);
             }
 
-            IPAddress prviIP = new IPAddress(networkAddress);
-            IPAddress zadnIP = new IPAddress(broadcastAddress);
+            IPAddress firstIP = new IPAddress(networkAddress);
+            IPAddress lastIP = new IPAddress(broadcastAddress);
 
-            Console.WriteLine("Start IP: " + prviIP.ToString());
-            Console.WriteLine("End IP: " + zadnIP.ToString());
-
+            //for debugging purposes.............
+            Console.WriteLine("Start IP: " + firstIP.ToString());
+            Console.WriteLine("End IP: " + lastIP.ToString());
+            Console.WriteLine("CIDR: " + currentCIDR);
+            //...................................
 
             byte[] ipBytesIterated = networkAddress.ToArray();
             while (!ipBytesIterated.SequenceEqual(broadcastAddress))
             {
-                //ipBytesIterated = BitConverter.GetBytes(ipBytesIterated);
-
-                //if (BitConverter.IsLittleEndian)
-                //{
-                    //Array.Reverse(ipBytesIterated);
-                //}
-
-                //if (BitConverter.IsLittleEndian)
-                //Array.Reverse(bytes);
-
-                //currentPing = currentParts[0] + "." + currentParts[1] + "." + currentParts[2] + "." + i;
-
                 IPAddress currentIP = new IPAddress(ipBytesIterated);
 
                 curr = new Ping();
                 Console.WriteLine("Current IP: " + currentIP);
-                //Console.WriteLine("i: " + i);
-                //for (int k = 0; k < bytes.Length; k++)
-                    //Console.WriteLine(k + ": " + bytes[k]);
                 reply = curr.Send(currentIP);
-
-                
 
                 //PLS MAN FIX KI TF JE TU
                 this.BeginInvoke((Action)delegate ()
@@ -134,13 +107,10 @@ namespace IoT_defender
                     }
                     catch (Exception exception)
                     {
-
+                        Console.WriteLine("ERROR: REPLY STATUS: " + exception.ToString());
                     }
                 }
-
                 IncrementIPAddressBytes(ref ipBytesIterated);
-
-                //Array.Reverse(bytes);
             }
             MessageBox.Show("Subnet scan completed");
         }
@@ -150,15 +120,11 @@ namespace IoT_defender
             {
                 ipBytes[i]++;
 
-                if (ipBytes[i] != 0) // No overflow, exit the loop
+                if (ipBytes[i] != 0) // exit loop in case of overflow
                 {
                     break;
                 }
             }
-        }
-        private void dgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }

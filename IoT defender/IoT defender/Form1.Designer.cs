@@ -63,7 +63,6 @@ namespace IoT_defender
             this.label1.Size = new System.Drawing.Size(98, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Enter IP and CIDR:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // button1
             // 
@@ -89,7 +88,6 @@ namespace IoT_defender
             this.dgv.ReadOnly = true;
             this.dgv.Size = new System.Drawing.Size(707, 408);
             this.dgv.TabIndex = 4;
-            this.dgv.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellContentClick);
             // 
             // ip
             // 
@@ -143,7 +141,6 @@ namespace IoT_defender
             this.Controls.Add(this.input_ip);
             this.Name = "mainPage";
             this.Text = "IoT Defender";
-            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
