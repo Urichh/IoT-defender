@@ -26,14 +26,23 @@ namespace IoT_defender
             bw.RunWorkerAsync();
         }
         */
+        bool scanInProggress = false;
+        private async void button1_Click(object sender, EventArgs e){
+            if(scanInProggress == false)
+            {
+                scanInProggress = true;
+                await Task.Run(() => Scan());
+            }
+            else if(scanInProggress == true)
+            {
+                Console.WriteLine("STOP SCAN!");
+            }
 
-        private async void button1_Click(object sender, EventArgs e)
-        {
-            await Task.Run(() => Scan());
         }
 
         private async Task Scan()
         {
+            //button1.Text = "stop";
             Thread.Sleep(100);
 
             string name = "";
@@ -88,6 +97,12 @@ namespace IoT_defender
                 //PLS MAN FIX KI TF JE TU       
                 this.BeginInvoke((Action)delegate ()
                 {
+                    //button 1 features
+                    if (button1.Text == "scan")
+                    {
+                        button1.Text = "stop";
+                    }
+
                     //counter is behind by 1 and i don't know why
                     counter = "current ip: " + currentIP;
                     curr_ip.Text = counter;
